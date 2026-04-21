@@ -1,8 +1,9 @@
+import { createRequire } from 'module';
+
+var SourceMap, SourceMapConsumer;
 try {
-  if (typeof define !== 'function' || !define.amd) {
-    var SourceMap = require('source-map'),
-      SourceMapConsumer = SourceMap.SourceMapConsumer;
-  }
+  SourceMap = createRequire(import.meta.url)('source-map');
+  SourceMapConsumer = SourceMap.SourceMapConsumer;
 } catch {
   /* NOP for in browser */
 }

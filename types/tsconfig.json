@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "es2015",
+    "moduleResolution": "bundler",
     "lib": ["es6"],
     "exactOptionalPropertyTypes": true,
     "noUncheckedIndexedAccess": true,

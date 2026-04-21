@@ -1,7 +1,7 @@
-const fs = require('fs');
-const { execSync } = require('child_process');
-const git = require('./util/git');
-const semver = require('semver');
+import fs from 'fs';
+import { execSync } from 'child_process';
+import * as git from './util/git.js';
+import semver from 'semver';
 
 async function main() {
   const version = process.argv[2];
@@ -50,16 +50,16 @@ async function main() {
   execSync('npm run build', { stdio: 'inherit' });
 }
 
-async function replaceAndAdd(filePath, regex, value) {
+export async function replaceAndAdd(filePath, regex, value) {
   let content = fs.readFileSync(filePath, 'utf8');
   content = content.replace(regex, value);
   fs.writeFileSync(filePath, content);
   await git.add(filePath);
 }
 
-module.exports = { replaceAndAdd };
+import { fileURLToPath } from 'url';
 
-if (require.main === module) {
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
   main().catch((err) => {
     // eslint-disable-next-line no-console
     console.error(err);

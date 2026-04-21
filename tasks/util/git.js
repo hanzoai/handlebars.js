@@ -1,30 +1,33 @@
-const childProcess = require('child_process');
+import childProcess from 'child_process';
 
-module.exports = {
-  async remotes() {
-    return git('remote', '-v');
-  },
-  async branches() {
-    return git('branch', '-a');
-  },
-  async commitInfo() {
-    const headSha = await getHeadSha();
-    const masterSha = await getMasterSha();
-    return {
-      headSha,
-      masterSha,
-      tagName: await getTagName(),
-      isMaster: headSha === masterSha,
-    };
-  },
-  async add(path) {
-    return git('add', '-f', path);
-  },
-  async commit(message) {
-    return git('commit', '--message', message);
-  },
-  git, // visible for testing
-};
+export async function remotes() {
+  return git('remote', '-v');
+}
+
+export async function branches() {
+  return git('branch', '-a');
+}
+
+export async function commitInfo() {
+  const headSha = await getHeadSha();
+  const masterSha = await getMasterSha();
+  return {
+    headSha,
+    masterSha,
+    tagName: await getTagName(),
+    isMaster: headSha === masterSha,
+  };
+}
+
+export async function add(path) {
+  return git('add', '-f', path);
+}
+
+export async function commit(message) {
+  return git('commit', '--message', message);
+}
+
+export { git };
 
 async function getHeadSha() {
   const stdout = await git('rev-parse', '--short', 'HEAD');
