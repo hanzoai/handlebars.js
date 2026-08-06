@@ -13,3 +13,10 @@ jobs:
   cicd:
     uses: hanzoai/ci/.hanzo/workflows/build.yml@v1
     secrets: inherit
+    # spec/mustache is a submodule (the shared mustache conformance corpus) and
+    # spec/spec.js reads it at load time. Without it that suite dies on ENOENT
+    # while the other 18 files pass — a build that omits part of its own source
+    # and still looks almost green. The reusable does not fetch submodules by
+    # default, so the repo that has one says so.
+    with:
+      submodules: recursive

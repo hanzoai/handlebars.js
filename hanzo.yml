@@ -19,6 +19,13 @@
 #
 # pnpm comes from corepack (package.json pins packageManager pnpm@11.6.0), which
 # the reusable enables for every JS caller.
+#
+# The caller passes `submodules: recursive`, and that is part of this gate, not
+# a checkout detail: spec/mustache is a submodule holding the shared mustache
+# conformance corpus, and spec/spec.js reads that directory at load time.
+# Without it the suite reports 507 passed and ONE file failed on ENOENT —
+# nearly green, having skipped the entire cross-implementation conformance
+# corpus. Measured, not assumed.
 test:
   - name: build-and-unit
     run: pnpm install --frozen-lockfile && pnpm run build && pnpm run test:unit
