@@ -1,0 +1,24 @@
+# Canonical CI/CD config for hanzoai/handlebars.js — read by the hanzoai/ci
+# reusable workflow (.hanzo/workflows/cicd.yml) and by platform.hanzo.ai.
+#
+# LIBRARY: the Handlebars template compiler and runtime. No image, no deploy —
+# it ships from a tag.
+#
+# Build then unit suite, in that order and both required. `build` is the rspack
+# bundle, which is what actually gets published; `test:unit` is the vitest
+# `node` project — the parser, the compiler, the runtime, block helpers,
+# partials, and the escaping rules. Escaping in particular is why the suite and
+# not a type-check: `{{x}}` vs `{{{x}}}` is the difference between a template
+# engine and an XSS vector, and it is a runtime property.
+#
+# The full `pnpm test` additionally runs the rspack, tasks and browser projects
+# under coverage. Those are a release lane — they bundle repeatedly and drive a
+# headless browser — so the merge gate stops at build + node. Said out loud
+# rather than left implied, so nobody reads a green here as "the browser build
+# was tested".
+#
+# pnpm comes from corepack (package.json pins packageManager pnpm@11.6.0), which
+# the reusable enables for every JS caller.
+test:
+  - name: build-and-unit
+    run: pnpm install --frozen-lockfile && pnpm run build && pnpm run test:unit
